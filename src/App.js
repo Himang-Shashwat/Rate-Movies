@@ -12,7 +12,7 @@ const average = (arr) =>
 export default function App() {
   const [query, setQuery] = useState("");
   const [selectedID, setSelectedID] = useState(null);
-  const { movies, isLoading, error } = useMovies(query, handleCloseMovie);
+  const { movies, isLoading, error } = useMovies(query);
   const [watched, setWatched] = useLocalStorageState([], "watched");
 
   function handleSelectMovie(id) {
@@ -93,7 +93,7 @@ function Logo() {
   return (
     <div className="logo">
       <span role="img">🍿</span>
-      <h1>usePopcorn</h1>
+      <h1>MoviePlex</h1>
     </div>
   );
 }
@@ -187,6 +187,7 @@ function MovieDetails({ selectedID, onCloseMovie, onAddWatched, watched }) {
   const watchedUserRating = watched.find(
     (movie) => movie.imdbID === selectedID
   )?.userRating;
+
   const {
     Title: title,
     Year: year,
@@ -207,7 +208,7 @@ function MovieDetails({ selectedID, onCloseMovie, onAddWatched, watched }) {
       poster,
       year,
       imdbRating: Number(imdbRating),
-      runtime: runtime.split(" ").at(0),
+      runtime: Number(runtime.split(" ").at(0)),
       userRating,
       countRatingDecisions: countRatingClicks.current,
     };
