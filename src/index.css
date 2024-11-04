@@ -351,6 +351,64 @@ body {
   justify-content: center;
 }
 
+/* ******* */
+
+.slideshow-container {
+  position: relative;
+  width: 100%;
+  max-width: 800px;
+  margin: auto;
+  overflow: hidden;
+  border-radius: 0.9rem;
+  background-color: var(--color-background-500);
+  display: flex;
+  align-items: center;
+}
+
+.slide {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.movie-info {
+  color: var(--color-text);
+  background: rgba(50, 50, 50, 0.7);
+  padding: 1rem;
+  width: 50%;
+  box-sizing: border-box;
+  border-radius: 0.9rem;
+}
+
+.movie-info h2 {
+  font-size: 2.4rem;
+  color: var(--color-primary);
+  margin-bottom: 0.4rem;
+  line-height: 1.1;
+}
+
+.movie-info p {
+  font-size: 1.6rem;
+  color: var(--color-text-dark);
+  margin-bottom: 0.5rem;
+}
+
+.slide img {
+  width: 50%;
+  height: auto;
+  border-radius: 0.9rem;
+  border: 1px solid var(--color-background-100);
+  object-fit: cover;
+}
+
+.loading-text {
+  text-align: center;
+  font-size: 2rem;
+  color: var(--color-text);
+  margin-top: 2rem;
+}
+
 /*
 SPACING SYSTEM (px)
 2 / 4 / 8 / 12 / 16 / 24 / 32 / 40 / 48 / 64 / 80 / 96 / 128
