@@ -2,55 +2,61 @@ import React, { useEffect, useState } from "react";
 import Loader from "./Loader";
 import "./../index.css";
 
-const API_KEY = "bb6c5efc";
+const KEY = "5f953a9fa8a229b7719a351b39cd8c9f";
 
 export default function Home() {
   const [movies, setMovies] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
+  const [genres, setGenres] = useState({});
 
   useEffect(() => {
-    const fetchLatestMovies = async () => {
+    async function fetchGenres() {
+      try {
+        const res = await fetch(
+          `https://api.themoviedb.org/3/genre/movie/list?api_key=${KEY}&language=en-US`
+        );
+        const data = await res.json();
+        const genreMap = data.genres.reduce((acc, genre) => {
+          acc[genre.id] = genre.name;
+          return acc;
+        }, {});
+        setGenres(genreMap);
+      } catch (error) {
+        console.error("Failed to fetch genres:", error);
+      }
+    }
+
+    fetchGenres();
+  }, []);
+
+  useEffect(() => {
+    async function fetchTrendingMovies() {
       try {
         setIsLoading(true);
-
-        const currentYear = new Date().getFullYear();
-        const response = await fetch(
-          `http://www.omdbapi.com/?apikey=${API_KEY}&s=movie&y=${currentYear}&type=movie`
+        const res = await fetch(
+          `https://api.themoviedb.org/3/trending/movie/week?api_key=${KEY}`
         );
-        const data = await response.json();
-
-        if (data.Search) {
-          const selectedMovies = data.Search.slice(0, 10);
-
-          const movieData = await Promise.all(
-            selectedMovies.map(async (movie) => {
-              const detailsResponse = await fetch(
-                `http://www.omdbapi.com/?apikey=${API_KEY}&i=${movie.imdbID}`
-              );
-              const details = await detailsResponse.json();
-              return details;
-            })
-          );
-
-          setMovies(movieData.sort(() => 0.5 - Math.random()));
+        const data = await res.json();
+        if (data.results) {
+          const selectedMovies = data.results;
+          setMovies(selectedMovies.sort(() => 0.5 - Math.random()));
         }
       } catch (error) {
         console.error("Failed to fetch movies:", error);
       } finally {
         setIsLoading(false);
       }
-    };
+    }
 
-    fetchLatestMovies();
+    fetchTrendingMovies();
   }, []);
 
   useEffect(() => {
     if (!isLoading && movies.length > 0) {
       const interval = setInterval(() => {
         setCurrentIndex((prevIndex) => (prevIndex + 1) % movies.length);
-      }, 5000);
-
+      }, 7000);
       return () => clearInterval(interval);
     }
   }, [movies, isLoading]);
@@ -60,18 +66,46 @@ export default function Home() {
       {isLoading ? (
         <Loader />
       ) : (
-        <div className="slide">
-          <div className="movie-info">
-            <h2>{movies[currentIndex]?.Title}</h2>
-            <p>{movies[currentIndex]?.Plot}</p>
-            <p>Duration: {movies[currentIndex]?.Runtime || "N/A"}</p>
-            <p>Release Date: {movies[currentIndex]?.Year}</p>{" "}
-          </div>
-          <img
-            src={movies[currentIndex]?.Poster}
-            alt={movies[currentIndex]?.Title}
-          />
-        </div>
+        <>
+          {movies.map((movie, index) => (
+            <div
+              key={movie.id}
+              className={`slide ${index === currentIndex ? "active" : ""}`}
+            >
+              <div className="movie-info">
+                <h2>{movie.title}</h2>
+                <p>{movie.overview}</p>
+                <p>
+                  Genre:{" "}
+                  {movie.genre_ids
+                    .map((id) => genres[id] || "Unknown")
+                    .join(", ")}
+                </p>
+                <p>Release Date: {movie.release_date}</p>
+              </div>
+              <img
+                src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                alt={`Poster of ${movie.title}`}
+              />
+            </div>
+          ))}
+          <button
+            className="arrow arrow-right"
+            onClick={() =>
+              setCurrentIndex(
+                (currentIndex - 1 + movies.length) % movies.length
+              )
+            }
+          >
+            ◀
+          </button>
+          <button
+            className="arrow arrow-left"
+            onClick={() => setCurrentIndex((currentIndex + 1) % movies.length)}
+          >
+            ▶
+          </button>
+        </>
       )}
     </div>
   );

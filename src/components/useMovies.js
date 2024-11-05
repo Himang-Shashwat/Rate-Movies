@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-const KEY = "bb6c5efc";
+const KEY = "5f953a9fa8a229b7719a351b39cd8c9f";
 
 export function useMovies(query, callback) {
   const [movies, setMovies] = useState([]);
@@ -19,7 +19,8 @@ export function useMovies(query, callback) {
           setError("");
 
           const res = await fetch(
-            `http://www.omdbapi.com/?apikey=${KEY}&s=${query}`,
+            `https://api.themoviedb.org/3/search/movie?api_key=${KEY}&query=${query}
+`,
             { signal: controller.signal }
           );
 

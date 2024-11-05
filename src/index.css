@@ -84,6 +84,7 @@ body {
   display: flex;
   align-items: center;
   gap: 0.8rem;
+  cursor: pointer;
 }
 
 .logo span {
@@ -369,7 +370,16 @@ body {
   display: flex;
   justify-content: space-between;
   width: 100%;
-  transition: opacity 0.5s ease-in-out;
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+}
+
+.slide.active {
+  opacity: 1;
+  position: relative;
 }
 
 .movie-info {
@@ -379,6 +389,11 @@ body {
   width: 50%;
   box-sizing: border-box;
   border-radius: 0.9rem;
+  transition: transform 0.3s ease;
+}
+
+.movie-info:hover {
+  transform: scale(1.05);
 }
 
 .movie-info h2 {
@@ -395,18 +410,48 @@ body {
 }
 
 .slide img {
-  width: 50%;
-  height: auto;
+  width: 400px;
+  height: 600px;
   border-radius: 0.9rem;
   border: 1px solid var(--color-background-100);
   object-fit: cover;
 }
 
 .loading-text {
-  text-align: center;
+  color: var(--color-primary);
   font-size: 2rem;
-  color: var(--color-text);
   margin-top: 2rem;
+  text-align: center;
+}
+
+.arrow {
+  position: absolute;
+  right: 10px;
+  font-size: 2.5rem;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.5);
+  border: none;
+  border-radius: 50%;
+  width: 3rem;
+  height: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.arrow:hover {
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+.arrow-right {
+  top: 82%;
+}
+
+.arrow-left {
+  top: 90%;
+  transform: rotate(180deg);
 }
 
 /*
